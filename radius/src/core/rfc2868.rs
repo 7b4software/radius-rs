@@ -86,11 +86,13 @@ pub fn lookup_tunnel_type(packet: &Packet) -> Option<Result<(TunnelType, Tag), A
     })
 }
 /// Lookup all of the `tunnel_type` tagged value-defined integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_tunnel_type(packet: &Packet) -> Result<Vec<(TunnelType, Tag)>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(TUNNEL_TYPE_TYPE) {
         let (v, t) = avp.encode_tagged_u32()?;
-        vec.push((v as TunnelType, t))
+        vec.push((v as TunnelType, t));
     }
     Ok(vec)
 }
@@ -116,13 +118,15 @@ pub fn lookup_tunnel_medium_type(
     })
 }
 /// Lookup all of the `tunnel_medium_type` tagged value-defined integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_tunnel_medium_type(
     packet: &Packet,
 ) -> Result<Vec<(TunnelMediumType, Tag)>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(TUNNEL_MEDIUM_TYPE_TYPE) {
         let (v, t) = avp.encode_tagged_u32()?;
-        vec.push((v as TunnelMediumType, t))
+        vec.push((v as TunnelMediumType, t));
     }
     Ok(vec)
 }
@@ -143,20 +147,24 @@ pub fn add_tunnel_client_endpoint(packet: &mut Packet, tag: Option<&Tag>, value:
 /// Lookup a `tunnel_client_endpoint` tagged string value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `tunnel_client_endpoint`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_tunnel_client_endpoint(
     packet: &Packet,
 ) -> Option<Result<(String, Option<Tag>), AVPError>> {
     packet
         .lookup(TUNNEL_CLIENT_ENDPOINT_TYPE)
-        .map(|v| v.encode_tagged_string())
+        .map(AVP::encode_tagged_string)
 }
 /// Lookup all of the `tunnel_client_endpoint` tagged string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_tunnel_client_endpoint(
     packet: &Packet,
 ) -> Result<Vec<(String, Option<Tag>)>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(TUNNEL_CLIENT_ENDPOINT_TYPE) {
-        vec.push(avp.encode_tagged_string()?)
+        vec.push(avp.encode_tagged_string()?);
     }
     Ok(vec)
 }
@@ -177,20 +185,24 @@ pub fn add_tunnel_server_endpoint(packet: &mut Packet, tag: Option<&Tag>, value:
 /// Lookup a `tunnel_server_endpoint` tagged string value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `tunnel_server_endpoint`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_tunnel_server_endpoint(
     packet: &Packet,
 ) -> Option<Result<(String, Option<Tag>), AVPError>> {
     packet
         .lookup(TUNNEL_SERVER_ENDPOINT_TYPE)
-        .map(|v| v.encode_tagged_string())
+        .map(AVP::encode_tagged_string)
 }
 /// Lookup all of the `tunnel_server_endpoint` tagged string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_tunnel_server_endpoint(
     packet: &Packet,
 ) -> Result<Vec<(String, Option<Tag>)>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(TUNNEL_SERVER_ENDPOINT_TYPE) {
-        vec.push(avp.encode_tagged_string()?)
+        vec.push(avp.encode_tagged_string()?);
     }
     Ok(vec)
 }
@@ -201,6 +213,8 @@ pub fn delete_tunnel_password(packet: &mut Packet) {
     packet.delete(TUNNEL_PASSWORD_TYPE);
 }
 /// Add `tunnel_password` tunnel-password value to a packet.
+/// # Errors
+/// `AVPError`
 pub fn add_tunnel_password(
     packet: &mut Packet,
     tag: Option<&Tag>,
@@ -218,16 +232,20 @@ pub fn add_tunnel_password(
 /// Lookup a `tunnel_password` tunnel-password value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `tunnel_password`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_tunnel_password(packet: &Packet) -> Option<Result<(Vec<u8>, Tag), AVPError>> {
     packet
         .lookup(TUNNEL_PASSWORD_TYPE)
         .map(|v| v.encode_tunnel_password(packet.get_secret(), packet.get_authenticator()))
 }
 /// Lookup all of the `tunnel_password` tunnel-password value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_tunnel_password(packet: &Packet) -> Result<Vec<(Vec<u8>, Tag)>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(TUNNEL_PASSWORD_TYPE) {
-        vec.push(avp.encode_tunnel_password(packet.get_secret(), packet.get_authenticator())?)
+        vec.push(avp.encode_tunnel_password(packet.get_secret(), packet.get_authenticator())?);
     }
     Ok(vec)
 }
@@ -248,20 +266,24 @@ pub fn add_tunnel_private_group_id(packet: &mut Packet, tag: Option<&Tag>, value
 /// Lookup a `tunnel_private_group_id` tagged string value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `tunnel_private_group_id`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_tunnel_private_group_id(
     packet: &Packet,
 ) -> Option<Result<(String, Option<Tag>), AVPError>> {
     packet
         .lookup(TUNNEL_PRIVATE_GROUP_ID_TYPE)
-        .map(|v| v.encode_tagged_string())
+        .map(AVP::encode_tagged_string)
 }
 /// Lookup all of the `tunnel_private_group_id` tagged string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_tunnel_private_group_id(
     packet: &Packet,
 ) -> Result<Vec<(String, Option<Tag>)>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(TUNNEL_PRIVATE_GROUP_ID_TYPE) {
-        vec.push(avp.encode_tagged_string()?)
+        vec.push(avp.encode_tagged_string()?);
     }
     Ok(vec)
 }
@@ -282,20 +304,24 @@ pub fn add_tunnel_assignment_id(packet: &mut Packet, tag: Option<&Tag>, value: &
 /// Lookup a `tunnel_assignment_id` tagged string value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `tunnel_assignment_id`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_tunnel_assignment_id(
     packet: &Packet,
 ) -> Option<Result<(String, Option<Tag>), AVPError>> {
     packet
         .lookup(TUNNEL_ASSIGNMENT_ID_TYPE)
-        .map(|v| v.encode_tagged_string())
+        .map(AVP::encode_tagged_string)
 }
 /// Lookup all of the `tunnel_assignment_id` tagged string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_tunnel_assignment_id(
     packet: &Packet,
 ) -> Result<Vec<(String, Option<Tag>)>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(TUNNEL_ASSIGNMENT_ID_TYPE) {
-        vec.push(avp.encode_tagged_string()?)
+        vec.push(avp.encode_tagged_string()?);
     }
     Ok(vec)
 }
@@ -315,13 +341,15 @@ pub fn add_tunnel_preference(packet: &mut Packet, tag: Option<&Tag>, value: u32)
 pub fn lookup_tunnel_preference(packet: &Packet) -> Option<Result<(u32, Tag), AVPError>> {
     packet
         .lookup(TUNNEL_PREFERENCE_TYPE)
-        .map(|v| v.encode_tagged_u32())
+        .map(AVP::encode_tagged_u32)
 }
 /// Lookup all of the `tunnel_preference` tagged integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_tunnel_preference(packet: &Packet) -> Result<Vec<(u32, Tag)>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(TUNNEL_PREFERENCE_TYPE) {
-        vec.push(avp.encode_tagged_u32()?)
+        vec.push(avp.encode_tagged_u32()?);
     }
     Ok(vec)
 }
@@ -342,20 +370,24 @@ pub fn add_tunnel_client_auth_id(packet: &mut Packet, tag: Option<&Tag>, value: 
 /// Lookup a `tunnel_client_auth_id` tagged string value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `tunnel_client_auth_id`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_tunnel_client_auth_id(
     packet: &Packet,
 ) -> Option<Result<(String, Option<Tag>), AVPError>> {
     packet
         .lookup(TUNNEL_CLIENT_AUTH_ID_TYPE)
-        .map(|v| v.encode_tagged_string())
+        .map(AVP::encode_tagged_string)
 }
 /// Lookup all of the `tunnel_client_auth_id` tagged string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_tunnel_client_auth_id(
     packet: &Packet,
 ) -> Result<Vec<(String, Option<Tag>)>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(TUNNEL_CLIENT_AUTH_ID_TYPE) {
-        vec.push(avp.encode_tagged_string()?)
+        vec.push(avp.encode_tagged_string()?);
     }
     Ok(vec)
 }
@@ -376,20 +408,24 @@ pub fn add_tunnel_server_auth_id(packet: &mut Packet, tag: Option<&Tag>, value: 
 /// Lookup a `tunnel_server_auth_id` tagged string value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `tunnel_server_auth_id`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_tunnel_server_auth_id(
     packet: &Packet,
 ) -> Option<Result<(String, Option<Tag>), AVPError>> {
     packet
         .lookup(TUNNEL_SERVER_AUTH_ID_TYPE)
-        .map(|v| v.encode_tagged_string())
+        .map(AVP::encode_tagged_string)
 }
 /// Lookup all of the `tunnel_server_auth_id` tagged string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_tunnel_server_auth_id(
     packet: &Packet,
 ) -> Result<Vec<(String, Option<Tag>)>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(TUNNEL_SERVER_AUTH_ID_TYPE) {
-        vec.push(avp.encode_tagged_string()?)
+        vec.push(avp.encode_tagged_string()?);
     }
     Ok(vec)
 }

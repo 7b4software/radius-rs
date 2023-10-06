@@ -87,10 +87,12 @@ pub fn lookup_acct_status_type(packet: &Packet) -> Option<Result<AcctStatusType,
         .map(|v| Ok(v.encode_u32()? as AcctStatusType))
 }
 /// Lookup all of the `acct_status_type` value-defined integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_status_type(packet: &Packet) -> Result<Vec<AcctStatusType>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_STATUS_TYPE_TYPE) {
-        vec.push(avp.encode_u32()? as AcctStatusType)
+        vec.push(avp.encode_u32()? as AcctStatusType);
     }
     Ok(vec)
 }
@@ -107,14 +109,18 @@ pub fn add_acct_delay_time(packet: &mut Packet, value: u32) {
 /// Lookup a `acct_delay_time` integer value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `acct_delay_time`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_acct_delay_time(packet: &Packet) -> Option<Result<u32, AVPError>> {
-    packet.lookup(ACCT_DELAY_TIME_TYPE).map(|v| v.encode_u32())
+    packet.lookup(ACCT_DELAY_TIME_TYPE).map(AVP::encode_u32)
 }
 /// Lookup all of the `acct_delay_time` integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_delay_time(packet: &Packet) -> Result<Vec<u32>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_DELAY_TIME_TYPE) {
-        vec.push(avp.encode_u32()?)
+        vec.push(avp.encode_u32()?);
     }
     Ok(vec)
 }
@@ -131,16 +137,18 @@ pub fn add_acct_input_octets(packet: &mut Packet, value: u32) {
 /// Lookup a `acct_input_octets` integer value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `acct_input_octets`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_acct_input_octets(packet: &Packet) -> Option<Result<u32, AVPError>> {
-    packet
-        .lookup(ACCT_INPUT_OCTETS_TYPE)
-        .map(|v| v.encode_u32())
+    packet.lookup(ACCT_INPUT_OCTETS_TYPE).map(AVP::encode_u32)
 }
 /// Lookup all of the `acct_input_octets` integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_input_octets(packet: &Packet) -> Result<Vec<u32>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_INPUT_OCTETS_TYPE) {
-        vec.push(avp.encode_u32()?)
+        vec.push(avp.encode_u32()?);
     }
     Ok(vec)
 }
@@ -157,16 +165,18 @@ pub fn add_acct_output_octets(packet: &mut Packet, value: u32) {
 /// Lookup a `acct_output_octets` integer value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `acct_output_octets`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_acct_output_octets(packet: &Packet) -> Option<Result<u32, AVPError>> {
-    packet
-        .lookup(ACCT_OUTPUT_OCTETS_TYPE)
-        .map(|v| v.encode_u32())
+    packet.lookup(ACCT_OUTPUT_OCTETS_TYPE).map(AVP::encode_u32)
 }
 /// Lookup all of the `acct_output_octets` integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_output_octets(packet: &Packet) -> Result<Vec<u32>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_OUTPUT_OCTETS_TYPE) {
-        vec.push(avp.encode_u32()?)
+        vec.push(avp.encode_u32()?);
     }
     Ok(vec)
 }
@@ -184,15 +194,15 @@ pub fn add_acct_session_id(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `acct_session_id`, it returns `None`.
 pub fn lookup_acct_session_id(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet
-        .lookup(ACCT_SESSION_ID_TYPE)
-        .map(|v| v.encode_string())
+    packet.lookup(ACCT_SESSION_ID_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `acct_session_id` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_session_id(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_SESSION_ID_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -215,10 +225,12 @@ pub fn lookup_acct_authentic(packet: &Packet) -> Option<Result<AcctAuthentic, AV
         .map(|v| Ok(v.encode_u32()? as AcctAuthentic))
 }
 /// Lookup all of the `acct_authentic` value-defined integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_authentic(packet: &Packet) -> Result<Vec<AcctAuthentic>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_AUTHENTIC_TYPE) {
-        vec.push(avp.encode_u32()? as AcctAuthentic)
+        vec.push(avp.encode_u32()? as AcctAuthentic);
     }
     Ok(vec)
 }
@@ -235,16 +247,18 @@ pub fn add_acct_session_time(packet: &mut Packet, value: u32) {
 /// Lookup a `acct_session_time` integer value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `acct_session_time`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_acct_session_time(packet: &Packet) -> Option<Result<u32, AVPError>> {
-    packet
-        .lookup(ACCT_SESSION_TIME_TYPE)
-        .map(|v| v.encode_u32())
+    packet.lookup(ACCT_SESSION_TIME_TYPE).map(AVP::encode_u32)
 }
 /// Lookup all of the `acct_session_time` integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_session_time(packet: &Packet) -> Result<Vec<u32>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_SESSION_TIME_TYPE) {
-        vec.push(avp.encode_u32()?)
+        vec.push(avp.encode_u32()?);
     }
     Ok(vec)
 }
@@ -261,16 +275,18 @@ pub fn add_acct_input_packets(packet: &mut Packet, value: u32) {
 /// Lookup a `acct_input_packets` integer value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `acct_input_packets`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_acct_input_packets(packet: &Packet) -> Option<Result<u32, AVPError>> {
-    packet
-        .lookup(ACCT_INPUT_PACKETS_TYPE)
-        .map(|v| v.encode_u32())
+    packet.lookup(ACCT_INPUT_PACKETS_TYPE).map(AVP::encode_u32)
 }
 /// Lookup all of the `acct_input_packets` integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_input_packets(packet: &Packet) -> Result<Vec<u32>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_INPUT_PACKETS_TYPE) {
-        vec.push(avp.encode_u32()?)
+        vec.push(avp.encode_u32()?);
     }
     Ok(vec)
 }
@@ -287,16 +303,18 @@ pub fn add_acct_output_packets(packet: &mut Packet, value: u32) {
 /// Lookup a `acct_output_packets` integer value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `acct_output_packets`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_acct_output_packets(packet: &Packet) -> Option<Result<u32, AVPError>> {
-    packet
-        .lookup(ACCT_OUTPUT_PACKETS_TYPE)
-        .map(|v| v.encode_u32())
+    packet.lookup(ACCT_OUTPUT_PACKETS_TYPE).map(AVP::encode_u32)
 }
 /// Lookup all of the `acct_output_packets` integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_output_packets(packet: &Packet) -> Result<Vec<u32>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_OUTPUT_PACKETS_TYPE) {
-        vec.push(avp.encode_u32()?)
+        vec.push(avp.encode_u32()?);
     }
     Ok(vec)
 }
@@ -321,12 +339,14 @@ pub fn lookup_acct_terminate_cause(
         .map(|v| Ok(v.encode_u32()? as AcctTerminateCause))
 }
 /// Lookup all of the `acct_terminate_cause` value-defined integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_terminate_cause(
     packet: &Packet,
 ) -> Result<Vec<AcctTerminateCause>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_TERMINATE_CAUSE_TYPE) {
-        vec.push(avp.encode_u32()? as AcctTerminateCause)
+        vec.push(avp.encode_u32()? as AcctTerminateCause);
     }
     Ok(vec)
 }
@@ -346,13 +366,15 @@ pub fn add_acct_multi_session_id(packet: &mut Packet, value: &str) {
 pub fn lookup_acct_multi_session_id(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(ACCT_MULTI_SESSION_ID_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `acct_multi_session_id` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_multi_session_id(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_MULTI_SESSION_ID_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -369,14 +391,18 @@ pub fn add_acct_link_count(packet: &mut Packet, value: u32) {
 /// Lookup a `acct_link_count` integer value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `acct_link_count`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_acct_link_count(packet: &Packet) -> Option<Result<u32, AVPError>> {
-    packet.lookup(ACCT_LINK_COUNT_TYPE).map(|v| v.encode_u32())
+    packet.lookup(ACCT_LINK_COUNT_TYPE).map(AVP::encode_u32)
 }
 /// Lookup all of the `acct_link_count` integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_link_count(packet: &Packet) -> Result<Vec<u32>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_LINK_COUNT_TYPE) {
-        vec.push(avp.encode_u32()?)
+        vec.push(avp.encode_u32()?);
     }
     Ok(vec)
 }

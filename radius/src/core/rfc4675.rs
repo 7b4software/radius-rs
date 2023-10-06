@@ -52,14 +52,18 @@ pub fn add_egress_vlanid(packet: &mut Packet, value: u32) {
 /// Lookup a `egress_vlanid` integer value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `egress_vlanid`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_egress_vlanid(packet: &Packet) -> Option<Result<u32, AVPError>> {
-    packet.lookup(EGRESS_VLANID_TYPE).map(|v| v.encode_u32())
+    packet.lookup(EGRESS_VLANID_TYPE).map(AVP::encode_u32)
 }
 /// Lookup all of the `egress_vlanid` integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_egress_vlanid(packet: &Packet) -> Result<Vec<u32>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(EGRESS_VLANID_TYPE) {
-        vec.push(avp.encode_u32()?)
+        vec.push(avp.encode_u32()?);
     }
     Ok(vec)
 }
@@ -82,10 +86,12 @@ pub fn lookup_ingress_filters(packet: &Packet) -> Option<Result<IngressFilters, 
         .map(|v| Ok(v.encode_u32()? as IngressFilters))
 }
 /// Lookup all of the `ingress_filters` value-defined integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_ingress_filters(packet: &Packet) -> Result<Vec<IngressFilters>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(INGRESS_FILTERS_TYPE) {
-        vec.push(avp.encode_u32()? as IngressFilters)
+        vec.push(avp.encode_u32()? as IngressFilters);
     }
     Ok(vec)
 }
@@ -103,15 +109,15 @@ pub fn add_egress_vlan_name(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `egress_vlan_name`, it returns `None`.
 pub fn lookup_egress_vlan_name(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet
-        .lookup(EGRESS_VLAN_NAME_TYPE)
-        .map(|v| v.encode_string())
+    packet.lookup(EGRESS_VLAN_NAME_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `egress_vlan_name` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_egress_vlan_name(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(EGRESS_VLAN_NAME_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -131,13 +137,15 @@ pub fn add_user_priority_table(packet: &mut Packet, value: &[u8]) {
 pub fn lookup_user_priority_table(packet: &Packet) -> Option<Vec<u8>> {
     packet
         .lookup(USER_PRIORITY_TABLE_TYPE)
-        .map(|v| v.encode_bytes())
+        .map(AVP::encode_bytes)
 }
 /// Lookup all of the `user_priority_table` octets value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_user_priority_table(packet: &Packet) -> Vec<Vec<u8>> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(USER_PRIORITY_TABLE_TYPE) {
-        vec.push(avp.encode_bytes())
+        vec.push(avp.encode_bytes());
     }
     vec
 }

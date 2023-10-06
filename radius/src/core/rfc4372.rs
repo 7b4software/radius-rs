@@ -35,13 +35,15 @@ pub fn add_chargeable_user_identity(packet: &mut Packet, value: &[u8]) {
 pub fn lookup_chargeable_user_identity(packet: &Packet) -> Option<Vec<u8>> {
     packet
         .lookup(CHARGEABLE_USER_IDENTITY_TYPE)
-        .map(|v| v.encode_bytes())
+        .map(AVP::encode_bytes)
 }
 /// Lookup all of the `chargeable_user_identity` octets value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_chargeable_user_identity(packet: &Packet) -> Vec<Vec<u8>> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(CHARGEABLE_USER_IDENTITY_TYPE) {
-        vec.push(avp.encode_bytes())
+        vec.push(avp.encode_bytes());
     }
     vec
 }

@@ -59,7 +59,7 @@ impl Attributes {
     /// Encode an attribute.
     /// # Errors
     /// `String`
-     pub(crate) fn encode(&self) -> Result<Vec<u8>, String> {
+    pub(crate) fn encode(&self) -> Result<Vec<u8>, String> {
         let mut encoded: Vec<u8> = Vec::new();
 
         for avp in &self.0 {

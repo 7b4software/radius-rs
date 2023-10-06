@@ -45,13 +45,15 @@ pub fn add_acct_tunnel_connection(packet: &mut Packet, value: &str) {
 pub fn lookup_acct_tunnel_connection(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(ACCT_TUNNEL_CONNECTION_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `acct_tunnel_connection` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_tunnel_connection(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_TUNNEL_CONNECTION_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -68,16 +70,20 @@ pub fn add_acct_tunnel_packets_lost(packet: &mut Packet, value: u32) {
 /// Lookup a `acct_tunnel_packets_lost` integer value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `acct_tunnel_packets_lost`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_acct_tunnel_packets_lost(packet: &Packet) -> Option<Result<u32, AVPError>> {
     packet
         .lookup(ACCT_TUNNEL_PACKETS_LOST_TYPE)
-        .map(|v| v.encode_u32())
+        .map(AVP::encode_u32)
 }
 /// Lookup all of the `acct_tunnel_packets_lost` integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_tunnel_packets_lost(packet: &Packet) -> Result<Vec<u32>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_TUNNEL_PACKETS_LOST_TYPE) {
-        vec.push(avp.encode_u32()?)
+        vec.push(avp.encode_u32()?);
     }
     Ok(vec)
 }

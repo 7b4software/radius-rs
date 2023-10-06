@@ -28,6 +28,8 @@ pub fn delete_originating_line_info(packet: &mut Packet) {
     packet.delete(ORIGINATING_LINE_INFO_TYPE);
 }
 /// Add `originating_line_info` fixed-length octets value to a packet.
+/// # Errors
+/// `AVPError`
 pub fn add_originating_line_info(packet: &mut Packet, value: &[u8]) -> Result<(), AVPError> {
     if value.len() != 2 {
         return Err(AVPError::InvalidAttributeLengthError(
@@ -44,13 +46,13 @@ pub fn add_originating_line_info(packet: &mut Packet, value: &[u8]) -> Result<()
 pub fn lookup_originating_line_info(packet: &Packet) -> Option<Vec<u8>> {
     packet
         .lookup(ORIGINATING_LINE_INFO_TYPE)
-        .map(|v| v.encode_bytes())
+        .map(AVP::encode_bytes)
 }
 /// Lookup all of the `originating_line_info` fixed-length octets value from a packet.
 pub fn lookup_all_originating_line_info(packet: &Packet) -> Vec<Vec<u8>> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ORIGINATING_LINE_INFO_TYPE) {
-        vec.push(avp.encode_bytes())
+        vec.push(avp.encode_bytes());
     }
     vec
 }

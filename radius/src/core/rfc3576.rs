@@ -62,10 +62,12 @@ pub fn lookup_error_cause(packet: &Packet) -> Option<Result<ErrorCause, AVPError
         .map(|v| Ok(v.encode_u32()? as ErrorCause))
 }
 /// Lookup all of the `error_cause` value-defined integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_error_cause(packet: &Packet) -> Result<Vec<ErrorCause>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ERROR_CAUSE_TYPE) {
-        vec.push(avp.encode_u32()? as ErrorCause)
+        vec.push(avp.encode_u32()? as ErrorCause);
     }
     Ok(vec)
 }

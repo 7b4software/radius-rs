@@ -47,10 +47,12 @@ pub fn lookup_eap_lower_layer(packet: &Packet) -> Option<Result<EapLowerLayer, A
         .map(|v| Ok(v.encode_u32()? as EapLowerLayer))
 }
 /// Lookup all of the `eap_lower_layer` value-defined integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_eap_lower_layer(packet: &Packet) -> Result<Vec<EapLowerLayer>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(EAP_LOWER_LAYER_TYPE) {
-        vec.push(avp.encode_u32()? as EapLowerLayer)
+        vec.push(avp.encode_u32()? as EapLowerLayer);
     }
     Ok(vec)
 }

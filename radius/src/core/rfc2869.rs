@@ -65,16 +65,20 @@ pub fn add_acct_input_gigawords(packet: &mut Packet, value: u32) {
 /// Lookup a `acct_input_gigawords` integer value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `acct_input_gigawords`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_acct_input_gigawords(packet: &Packet) -> Option<Result<u32, AVPError>> {
     packet
         .lookup(ACCT_INPUT_GIGAWORDS_TYPE)
-        .map(|v| v.encode_u32())
+        .map(AVP::encode_u32)
 }
 /// Lookup all of the `acct_input_gigawords` integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_input_gigawords(packet: &Packet) -> Result<Vec<u32>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_INPUT_GIGAWORDS_TYPE) {
-        vec.push(avp.encode_u32()?)
+        vec.push(avp.encode_u32()?);
     }
     Ok(vec)
 }
@@ -91,16 +95,20 @@ pub fn add_acct_output_gigawords(packet: &mut Packet, value: u32) {
 /// Lookup a `acct_output_gigawords` integer value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `acct_output_gigawords`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_acct_output_gigawords(packet: &Packet) -> Option<Result<u32, AVPError>> {
     packet
         .lookup(ACCT_OUTPUT_GIGAWORDS_TYPE)
-        .map(|v| v.encode_u32())
+        .map(AVP::encode_u32)
 }
 /// Lookup all of the `acct_output_gigawords` integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_output_gigawords(packet: &Packet) -> Result<Vec<u32>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_OUTPUT_GIGAWORDS_TYPE) {
-        vec.push(avp.encode_u32()?)
+        vec.push(avp.encode_u32()?);
     }
     Ok(vec)
 }
@@ -117,14 +125,18 @@ pub fn add_event_timestamp(packet: &mut Packet, value: &DateTime<Utc>) {
 /// Lookup a `event_timestamp` date value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `event_timestamp`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_event_timestamp(packet: &Packet) -> Option<Result<DateTime<Utc>, AVPError>> {
-    packet.lookup(EVENT_TIMESTAMP_TYPE).map(|v| v.encode_date())
+    packet.lookup(EVENT_TIMESTAMP_TYPE).map(AVP::encode_date)
 }
 /// Lookup all of the `event_timestamp` date value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_event_timestamp(packet: &Packet) -> Result<Vec<DateTime<Utc>>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(EVENT_TIMESTAMP_TYPE) {
-        vec.push(avp.encode_date()?)
+        vec.push(avp.encode_date()?);
     }
     Ok(vec)
 }
@@ -135,6 +147,8 @@ pub fn delete_arap_password(packet: &mut Packet) {
     packet.delete(ARAP_PASSWORD_TYPE);
 }
 /// Add `arap_password` fixed-length octets value to a packet.
+/// # Errors
+/// `AVPError`
 pub fn add_arap_password(packet: &mut Packet, value: &[u8]) -> Result<(), AVPError> {
     if value.len() != 16 {
         return Err(AVPError::InvalidAttributeLengthError(
@@ -149,13 +163,13 @@ pub fn add_arap_password(packet: &mut Packet, value: &[u8]) -> Result<(), AVPErr
 ///
 /// It returns the first looked up value. If there is no associated value with `arap_password`, it returns `None`.
 pub fn lookup_arap_password(packet: &Packet) -> Option<Vec<u8>> {
-    packet.lookup(ARAP_PASSWORD_TYPE).map(|v| v.encode_bytes())
+    packet.lookup(ARAP_PASSWORD_TYPE).map(AVP::encode_bytes)
 }
 /// Lookup all of the `arap_password` fixed-length octets value from a packet.
 pub fn lookup_all_arap_password(packet: &Packet) -> Vec<Vec<u8>> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ARAP_PASSWORD_TYPE) {
-        vec.push(avp.encode_bytes())
+        vec.push(avp.encode_bytes());
     }
     vec
 }
@@ -166,6 +180,8 @@ pub fn delete_arap_features(packet: &mut Packet) {
     packet.delete(ARAP_FEATURES_TYPE);
 }
 /// Add `arap_features` fixed-length octets value to a packet.
+/// # Errors
+/// `AVPError`
 pub fn add_arap_features(packet: &mut Packet, value: &[u8]) -> Result<(), AVPError> {
     if value.len() != 14 {
         return Err(AVPError::InvalidAttributeLengthError(
@@ -180,13 +196,13 @@ pub fn add_arap_features(packet: &mut Packet, value: &[u8]) -> Result<(), AVPErr
 ///
 /// It returns the first looked up value. If there is no associated value with `arap_features`, it returns `None`.
 pub fn lookup_arap_features(packet: &Packet) -> Option<Vec<u8>> {
-    packet.lookup(ARAP_FEATURES_TYPE).map(|v| v.encode_bytes())
+    packet.lookup(ARAP_FEATURES_TYPE).map(AVP::encode_bytes)
 }
 /// Lookup all of the `arap_features` fixed-length octets value from a packet.
 pub fn lookup_all_arap_features(packet: &Packet) -> Vec<Vec<u8>> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ARAP_FEATURES_TYPE) {
-        vec.push(avp.encode_bytes())
+        vec.push(avp.encode_bytes());
     }
     vec
 }
@@ -209,10 +225,12 @@ pub fn lookup_arap_zone_access(packet: &Packet) -> Option<Result<ArapZoneAccess,
         .map(|v| Ok(v.encode_u32()? as ArapZoneAccess))
 }
 /// Lookup all of the `arap_zone_access` value-defined integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_arap_zone_access(packet: &Packet) -> Result<Vec<ArapZoneAccess>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ARAP_ZONE_ACCESS_TYPE) {
-        vec.push(avp.encode_u32()? as ArapZoneAccess)
+        vec.push(avp.encode_u32()? as ArapZoneAccess);
     }
     Ok(vec)
 }
@@ -229,14 +247,18 @@ pub fn add_arap_security(packet: &mut Packet, value: u32) {
 /// Lookup a `arap_security` integer value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `arap_security`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_arap_security(packet: &Packet) -> Option<Result<u32, AVPError>> {
-    packet.lookup(ARAP_SECURITY_TYPE).map(|v| v.encode_u32())
+    packet.lookup(ARAP_SECURITY_TYPE).map(AVP::encode_u32)
 }
 /// Lookup all of the `arap_security` integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_arap_security(packet: &Packet) -> Result<Vec<u32>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ARAP_SECURITY_TYPE) {
-        vec.push(avp.encode_u32()?)
+        vec.push(avp.encode_u32()?);
     }
     Ok(vec)
 }
@@ -256,13 +278,15 @@ pub fn add_arap_security_data(packet: &mut Packet, value: &str) {
 pub fn lookup_arap_security_data(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(ARAP_SECURITY_DATA_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `arap_security_data` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_arap_security_data(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ARAP_SECURITY_DATA_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -279,14 +303,18 @@ pub fn add_password_retry(packet: &mut Packet, value: u32) {
 /// Lookup a `password_retry` integer value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `password_retry`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_password_retry(packet: &Packet) -> Option<Result<u32, AVPError>> {
-    packet.lookup(PASSWORD_RETRY_TYPE).map(|v| v.encode_u32())
+    packet.lookup(PASSWORD_RETRY_TYPE).map(AVP::encode_u32)
 }
 /// Lookup all of the `password_retry` integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_password_retry(packet: &Packet) -> Result<Vec<u32>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(PASSWORD_RETRY_TYPE) {
-        vec.push(avp.encode_u32()?)
+        vec.push(avp.encode_u32()?);
     }
     Ok(vec)
 }
@@ -309,10 +337,12 @@ pub fn lookup_prompt(packet: &Packet) -> Option<Result<Prompt, AVPError>> {
         .map(|v| Ok(v.encode_u32()? as Prompt))
 }
 /// Lookup all of the `prompt` value-defined integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_prompt(packet: &Packet) -> Result<Vec<Prompt>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(PROMPT_TYPE) {
-        vec.push(avp.encode_u32()? as Prompt)
+        vec.push(avp.encode_u32()? as Prompt);
     }
     Ok(vec)
 }
@@ -330,13 +360,15 @@ pub fn add_connect_info(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `connect_info`, it returns `None`.
 pub fn lookup_connect_info(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet.lookup(CONNECT_INFO_TYPE).map(|v| v.encode_string())
+    packet.lookup(CONNECT_INFO_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `connect_info` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_connect_info(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(CONNECT_INFO_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -356,13 +388,15 @@ pub fn add_configuration_token(packet: &mut Packet, value: &str) {
 pub fn lookup_configuration_token(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(CONFIGURATION_TOKEN_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `configuration_token` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_configuration_token(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(CONFIGURATION_TOKEN_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -382,12 +416,13 @@ pub fn add_eap_message(packet: &mut Packet, value: &[u8]) {
 }
 pub fn lookup_eap_message(packet: &Packet) -> Option<Vec<u8>> {
     let avps = packet.lookup_all(EAP_MESSAGE_TYPE);
-    match avps.is_empty() {
-        true => None,
-        false => Some(avps.into_iter().fold(Vec::new(), |mut acc, v| {
+    if avps.is_empty() {
+        None
+    } else {
+        Some(avps.into_iter().fold(Vec::new(), |mut acc, v| {
             acc.extend(v.encode_bytes());
             acc
-        })),
+        }))
     }
 }
 
@@ -406,13 +441,15 @@ pub fn add_message_authenticator(packet: &mut Packet, value: &[u8]) {
 pub fn lookup_message_authenticator(packet: &Packet) -> Option<Vec<u8>> {
     packet
         .lookup(MESSAGE_AUTHENTICATOR_TYPE)
-        .map(|v| v.encode_bytes())
+        .map(AVP::encode_bytes)
 }
 /// Lookup all of the `message_authenticator` octets value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_message_authenticator(packet: &Packet) -> Vec<Vec<u8>> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(MESSAGE_AUTHENTICATOR_TYPE) {
-        vec.push(avp.encode_bytes())
+        vec.push(avp.encode_bytes());
     }
     vec
 }
@@ -423,6 +460,8 @@ pub fn delete_arap_challenge_response(packet: &mut Packet) {
     packet.delete(ARAP_CHALLENGE_RESPONSE_TYPE);
 }
 /// Add `arap_challenge_response` fixed-length octets value to a packet.
+/// # Errors
+/// `AVPError`
 pub fn add_arap_challenge_response(packet: &mut Packet, value: &[u8]) -> Result<(), AVPError> {
     if value.len() != 8 {
         return Err(AVPError::InvalidAttributeLengthError(
@@ -439,13 +478,13 @@ pub fn add_arap_challenge_response(packet: &mut Packet, value: &[u8]) -> Result<
 pub fn lookup_arap_challenge_response(packet: &Packet) -> Option<Vec<u8>> {
     packet
         .lookup(ARAP_CHALLENGE_RESPONSE_TYPE)
-        .map(|v| v.encode_bytes())
+        .map(AVP::encode_bytes)
 }
 /// Lookup all of the `arap_challenge_response` fixed-length octets value from a packet.
 pub fn lookup_all_arap_challenge_response(packet: &Packet) -> Vec<Vec<u8>> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ARAP_CHALLENGE_RESPONSE_TYPE) {
-        vec.push(avp.encode_bytes())
+        vec.push(avp.encode_bytes());
     }
     vec
 }
@@ -462,16 +501,20 @@ pub fn add_acct_interim_interval(packet: &mut Packet, value: u32) {
 /// Lookup a `acct_interim_interval` integer value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `acct_interim_interval`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_acct_interim_interval(packet: &Packet) -> Option<Result<u32, AVPError>> {
     packet
         .lookup(ACCT_INTERIM_INTERVAL_TYPE)
-        .map(|v| v.encode_u32())
+        .map(AVP::encode_u32)
 }
 /// Lookup all of the `acct_interim_interval` integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_acct_interim_interval(packet: &Packet) -> Result<Vec<u32>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ACCT_INTERIM_INTERVAL_TYPE) {
-        vec.push(avp.encode_u32()?)
+        vec.push(avp.encode_u32()?);
     }
     Ok(vec)
 }
@@ -489,13 +532,15 @@ pub fn add_nas_port_id(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `nas_port_id`, it returns `None`.
 pub fn lookup_nas_port_id(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet.lookup(NAS_PORT_ID_TYPE).map(|v| v.encode_string())
+    packet.lookup(NAS_PORT_ID_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `nas_port_id` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_nas_port_id(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(NAS_PORT_ID_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -513,13 +558,15 @@ pub fn add_framed_pool(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `framed_pool`, it returns `None`.
 pub fn lookup_framed_pool(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet.lookup(FRAMED_POOL_TYPE).map(|v| v.encode_string())
+    packet.lookup(FRAMED_POOL_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `framed_pool` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_framed_pool(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(FRAMED_POOL_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }

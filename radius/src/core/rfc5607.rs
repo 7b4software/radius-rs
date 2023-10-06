@@ -62,10 +62,12 @@ pub fn lookup_framed_management(packet: &Packet) -> Option<Result<FramedManageme
         .map(|v| Ok(v.encode_u32()? as FramedManagement))
 }
 /// Lookup all of the `framed_management` value-defined integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_framed_management(packet: &Packet) -> Result<Vec<FramedManagement>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(FRAMED_MANAGEMENT_TYPE) {
-        vec.push(avp.encode_u32()? as FramedManagement)
+        vec.push(avp.encode_u32()? as FramedManagement);
     }
     Ok(vec)
 }
@@ -93,12 +95,14 @@ pub fn lookup_management_transport_protection(
         .map(|v| Ok(v.encode_u32()? as ManagementTransportProtection))
 }
 /// Lookup all of the `management_transport_protection` value-defined integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_management_transport_protection(
     packet: &Packet,
 ) -> Result<Vec<ManagementTransportProtection>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(MANAGEMENT_TRANSPORT_PROTECTION_TYPE) {
-        vec.push(avp.encode_u32()? as ManagementTransportProtection)
+        vec.push(avp.encode_u32()? as ManagementTransportProtection);
     }
     Ok(vec)
 }
@@ -118,13 +122,15 @@ pub fn add_management_policy_id(packet: &mut Packet, value: &str) {
 pub fn lookup_management_policy_id(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(MANAGEMENT_POLICY_ID_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `management_policy_id` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_management_policy_id(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(MANAGEMENT_POLICY_ID_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -141,16 +147,20 @@ pub fn add_management_privilege_level(packet: &mut Packet, value: u32) {
 /// Lookup a `management_privilege_level` integer value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `management_privilege_level`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_management_privilege_level(packet: &Packet) -> Option<Result<u32, AVPError>> {
     packet
         .lookup(MANAGEMENT_PRIVILEGE_LEVEL_TYPE)
-        .map(|v| v.encode_u32())
+        .map(AVP::encode_u32)
 }
 /// Lookup all of the `management_privilege_level` integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_management_privilege_level(packet: &Packet) -> Result<Vec<u32>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(MANAGEMENT_PRIVILEGE_LEVEL_TYPE) {
-        vec.push(avp.encode_u32()?)
+        vec.push(avp.encode_u32()?);
     }
     Ok(vec)
 }

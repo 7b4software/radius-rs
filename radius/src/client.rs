@@ -87,7 +87,8 @@ impl Client {
         } else {
             "[::]:0"
         }
-        .parse().map_err(|error|ClientError::FailedUdpSocketBindingError(format!("{error:?}")))?;
+        .parse()
+        .map_err(|error| ClientError::FailedUdpSocketBindingError(format!("{error:?}")))?;
 
         let conn = match UdpSocket::bind(local_addr).await {
             Ok(conn) => conn,

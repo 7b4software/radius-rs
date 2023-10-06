@@ -33,15 +33,15 @@ pub fn add_nas_filter_rule(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `nas_filter_rule`, it returns `None`.
 pub fn lookup_nas_filter_rule(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet
-        .lookup(NAS_FILTER_RULE_TYPE)
-        .map(|v| v.encode_string())
+    packet.lookup(NAS_FILTER_RULE_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `nas_filter_rule` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_nas_filter_rule(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(NAS_FILTER_RULE_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }

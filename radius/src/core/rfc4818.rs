@@ -29,6 +29,8 @@ pub fn delete_delegated_ipv6_prefix(packet: &mut Packet) {
     packet.delete(DELEGATED_IPV6_PREFIX_TYPE);
 }
 /// Add `delegated_ipv6_prefix` ipv6 prefix value to a packet.
+/// # Errors
+/// `AVPError`
 pub fn add_delegated_ipv6_prefix(packet: &mut Packet, value: &[u8]) -> Result<(), AVPError> {
     packet.add(AVP::from_ipv6_prefix(DELEGATED_IPV6_PREFIX_TYPE, value)?);
     Ok(())
@@ -36,16 +38,20 @@ pub fn add_delegated_ipv6_prefix(packet: &mut Packet, value: &[u8]) -> Result<()
 /// Lookup a `delegated_ipv6_prefix` ipv6 prefix value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `delegated_ipv6_prefix`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_delegated_ipv6_prefix(packet: &Packet) -> Option<Result<Vec<u8>, AVPError>> {
     packet
         .lookup(DELEGATED_IPV6_PREFIX_TYPE)
-        .map(|v| v.encode_ipv6_prefix())
+        .map(AVP::encode_ipv6_prefix)
 }
 /// Lookup all of the `delegated_ipv6_prefix` ipv6 prefix value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_delegated_ipv6_prefix(packet: &Packet) -> Result<Vec<Vec<u8>>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DELEGATED_IPV6_PREFIX_TYPE) {
-        vec.push(avp.encode_ipv6_prefix()?)
+        vec.push(avp.encode_ipv6_prefix()?);
     }
     Ok(vec)
 }

@@ -39,16 +39,18 @@ pub fn add_nas_ipv6_address(packet: &mut Packet, value: &Ipv6Addr) {
 /// Lookup a `nas_ipv6_address` ipv6addr value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `nas_ipv6_address`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_nas_ipv6_address(packet: &Packet) -> Option<Result<Ipv6Addr, AVPError>> {
-    packet
-        .lookup(NAS_IPV6_ADDRESS_TYPE)
-        .map(|v| v.encode_ipv6())
+    packet.lookup(NAS_IPV6_ADDRESS_TYPE).map(AVP::encode_ipv6)
 }
 /// Lookup all of the `nas_ipv6_address` ipv6addr value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_nas_ipv6_address(packet: &Packet) -> Result<Vec<Ipv6Addr>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(NAS_IPV6_ADDRESS_TYPE) {
-        vec.push(avp.encode_ipv6()?)
+        vec.push(avp.encode_ipv6()?);
     }
     Ok(vec)
 }
@@ -59,6 +61,8 @@ pub fn delete_framed_interface_id(packet: &mut Packet) {
     packet.delete(FRAMED_INTERFACE_ID_TYPE);
 }
 /// Add `framed_interface_id` fixed-length octets value to a packet.
+/// # Errors
+/// `AVPError`
 pub fn add_framed_interface_id(packet: &mut Packet, value: &[u8]) -> Result<(), AVPError> {
     if value.len() != 8 {
         return Err(AVPError::InvalidAttributeLengthError(
@@ -75,13 +79,13 @@ pub fn add_framed_interface_id(packet: &mut Packet, value: &[u8]) -> Result<(), 
 pub fn lookup_framed_interface_id(packet: &Packet) -> Option<Vec<u8>> {
     packet
         .lookup(FRAMED_INTERFACE_ID_TYPE)
-        .map(|v| v.encode_bytes())
+        .map(AVP::encode_bytes)
 }
 /// Lookup all of the `framed_interface_id` fixed-length octets value from a packet.
 pub fn lookup_all_framed_interface_id(packet: &Packet) -> Vec<Vec<u8>> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(FRAMED_INTERFACE_ID_TYPE) {
-        vec.push(avp.encode_bytes())
+        vec.push(avp.encode_bytes());
     }
     vec
 }
@@ -92,6 +96,8 @@ pub fn delete_framed_ipv6_prefix(packet: &mut Packet) {
     packet.delete(FRAMED_IPV6_PREFIX_TYPE);
 }
 /// Add `framed_ipv6_prefix` ipv6 prefix value to a packet.
+/// # Errors
+/// `AVPError`
 pub fn add_framed_ipv6_prefix(packet: &mut Packet, value: &[u8]) -> Result<(), AVPError> {
     packet.add(AVP::from_ipv6_prefix(FRAMED_IPV6_PREFIX_TYPE, value)?);
     Ok(())
@@ -99,16 +105,20 @@ pub fn add_framed_ipv6_prefix(packet: &mut Packet, value: &[u8]) -> Result<(), A
 /// Lookup a `framed_ipv6_prefix` ipv6 prefix value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `framed_ipv6_prefix`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_framed_ipv6_prefix(packet: &Packet) -> Option<Result<Vec<u8>, AVPError>> {
     packet
         .lookup(FRAMED_IPV6_PREFIX_TYPE)
-        .map(|v| v.encode_ipv6_prefix())
+        .map(AVP::encode_ipv6_prefix)
 }
 /// Lookup all of the `framed_ipv6_prefix` ipv6 prefix value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_framed_ipv6_prefix(packet: &Packet) -> Result<Vec<Vec<u8>>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(FRAMED_IPV6_PREFIX_TYPE) {
-        vec.push(avp.encode_ipv6_prefix()?)
+        vec.push(avp.encode_ipv6_prefix()?);
     }
     Ok(vec)
 }
@@ -125,14 +135,18 @@ pub fn add_login_ipv6_host(packet: &mut Packet, value: &Ipv6Addr) {
 /// Lookup a `login_ipv6_host` ipv6addr value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `login_ipv6_host`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_login_ipv6_host(packet: &Packet) -> Option<Result<Ipv6Addr, AVPError>> {
-    packet.lookup(LOGIN_IPV6_HOST_TYPE).map(|v| v.encode_ipv6())
+    packet.lookup(LOGIN_IPV6_HOST_TYPE).map(AVP::encode_ipv6)
 }
 /// Lookup all of the `login_ipv6_host` ipv6addr value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_login_ipv6_host(packet: &Packet) -> Result<Vec<Ipv6Addr>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(LOGIN_IPV6_HOST_TYPE) {
-        vec.push(avp.encode_ipv6()?)
+        vec.push(avp.encode_ipv6()?);
     }
     Ok(vec)
 }
@@ -152,13 +166,15 @@ pub fn add_framed_ipv6_route(packet: &mut Packet, value: &str) {
 pub fn lookup_framed_ipv6_route(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(FRAMED_IPV6_ROUTE_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `framed_ipv6_route` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_framed_ipv6_route(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(FRAMED_IPV6_ROUTE_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -176,15 +192,15 @@ pub fn add_framed_ipv6_pool(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `framed_ipv6_pool`, it returns `None`.
 pub fn lookup_framed_ipv6_pool(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet
-        .lookup(FRAMED_IPV6_POOL_TYPE)
-        .map(|v| v.encode_string())
+    packet.lookup(FRAMED_IPV6_POOL_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `framed_ipv6_pool` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_framed_ipv6_pool(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(FRAMED_IPV6_POOL_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }

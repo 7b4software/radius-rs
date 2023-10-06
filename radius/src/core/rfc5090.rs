@@ -52,15 +52,15 @@ pub fn add_digest_response(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `digest_response`, it returns `None`.
 pub fn lookup_digest_response(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet
-        .lookup(DIGEST_RESPONSE_TYPE)
-        .map(|v| v.encode_string())
+    packet.lookup(DIGEST_RESPONSE_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `digest_response` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_response(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_RESPONSE_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -78,13 +78,15 @@ pub fn add_digest_realm(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `digest_realm`, it returns `None`.
 pub fn lookup_digest_realm(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet.lookup(DIGEST_REALM_TYPE).map(|v| v.encode_string())
+    packet.lookup(DIGEST_REALM_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `digest_realm` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_realm(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_REALM_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -102,13 +104,15 @@ pub fn add_digest_nonce(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `digest_nonce`, it returns `None`.
 pub fn lookup_digest_nonce(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet.lookup(DIGEST_NONCE_TYPE).map(|v| v.encode_string())
+    packet.lookup(DIGEST_NONCE_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `digest_nonce` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_nonce(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_NONCE_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -128,13 +132,15 @@ pub fn add_digest_response_auth(packet: &mut Packet, value: &str) {
 pub fn lookup_digest_response_auth(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(DIGEST_RESPONSE_AUTH_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `digest_response_auth` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_response_auth(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_RESPONSE_AUTH_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -152,15 +158,15 @@ pub fn add_digest_nextnonce(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `digest_nextnonce`, it returns `None`.
 pub fn lookup_digest_nextnonce(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet
-        .lookup(DIGEST_NEXTNONCE_TYPE)
-        .map(|v| v.encode_string())
+    packet.lookup(DIGEST_NEXTNONCE_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `digest_nextnonce` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_nextnonce(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_NEXTNONCE_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -178,13 +184,15 @@ pub fn add_digest_method(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `digest_method`, it returns `None`.
 pub fn lookup_digest_method(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet.lookup(DIGEST_METHOD_TYPE).map(|v| v.encode_string())
+    packet.lookup(DIGEST_METHOD_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `digest_method` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_method(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_METHOD_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -202,13 +210,15 @@ pub fn add_digest_uri(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `digest_uri`, it returns `None`.
 pub fn lookup_digest_uri(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet.lookup(DIGEST_URI_TYPE).map(|v| v.encode_string())
+    packet.lookup(DIGEST_URI_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `digest_uri` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_uri(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_URI_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -226,13 +236,15 @@ pub fn add_digest_qop(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `digest_qop`, it returns `None`.
 pub fn lookup_digest_qop(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet.lookup(DIGEST_QOP_TYPE).map(|v| v.encode_string())
+    packet.lookup(DIGEST_QOP_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `digest_qop` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_qop(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_QOP_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -250,15 +262,15 @@ pub fn add_digest_algorithm(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `digest_algorithm`, it returns `None`.
 pub fn lookup_digest_algorithm(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet
-        .lookup(DIGEST_ALGORITHM_TYPE)
-        .map(|v| v.encode_string())
+    packet.lookup(DIGEST_ALGORITHM_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `digest_algorithm` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_algorithm(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_ALGORITHM_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -278,13 +290,15 @@ pub fn add_digest_entity_body_hash(packet: &mut Packet, value: &str) {
 pub fn lookup_digest_entity_body_hash(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(DIGEST_ENTITY_BODY_HASH_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `digest_entity_body_hash` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_entity_body_hash(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_ENTITY_BODY_HASH_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -302,15 +316,15 @@ pub fn add_digest_c_nonce(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `digest_c_nonce`, it returns `None`.
 pub fn lookup_digest_c_nonce(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet
-        .lookup(DIGEST_C_NONCE_TYPE)
-        .map(|v| v.encode_string())
+    packet.lookup(DIGEST_C_NONCE_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `digest_c_nonce` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_c_nonce(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_C_NONCE_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -330,13 +344,15 @@ pub fn add_digest_nonce_count(packet: &mut Packet, value: &str) {
 pub fn lookup_digest_nonce_count(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(DIGEST_NONCE_COUNT_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `digest_nonce_count` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_nonce_count(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_NONCE_COUNT_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -354,15 +370,15 @@ pub fn add_digest_username(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `digest_username`, it returns `None`.
 pub fn lookup_digest_username(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet
-        .lookup(DIGEST_USERNAME_TYPE)
-        .map(|v| v.encode_string())
+    packet.lookup(DIGEST_USERNAME_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `digest_username` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_username(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_USERNAME_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -380,13 +396,15 @@ pub fn add_digest_opaque(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `digest_opaque`, it returns `None`.
 pub fn lookup_digest_opaque(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet.lookup(DIGEST_OPAQUE_TYPE).map(|v| v.encode_string())
+    packet.lookup(DIGEST_OPAQUE_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `digest_opaque` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_opaque(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_OPAQUE_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -406,13 +424,15 @@ pub fn add_digest_auth_param(packet: &mut Packet, value: &str) {
 pub fn lookup_digest_auth_param(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(DIGEST_AUTH_PARAM_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `digest_auth_param` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_auth_param(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_AUTH_PARAM_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -430,15 +450,15 @@ pub fn add_digest_aka_auts(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `digest_aka_auts`, it returns `None`.
 pub fn lookup_digest_aka_auts(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet
-        .lookup(DIGEST_AKA_AUTS_TYPE)
-        .map(|v| v.encode_string())
+    packet.lookup(DIGEST_AKA_AUTS_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `digest_aka_auts` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_aka_auts(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_AKA_AUTS_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -456,13 +476,15 @@ pub fn add_digest_domain(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `digest_domain`, it returns `None`.
 pub fn lookup_digest_domain(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet.lookup(DIGEST_DOMAIN_TYPE).map(|v| v.encode_string())
+    packet.lookup(DIGEST_DOMAIN_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `digest_domain` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_domain(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_DOMAIN_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -480,13 +502,15 @@ pub fn add_digest_stale(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `digest_stale`, it returns `None`.
 pub fn lookup_digest_stale(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet.lookup(DIGEST_STALE_TYPE).map(|v| v.encode_string())
+    packet.lookup(DIGEST_STALE_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `digest_stale` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_stale(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_STALE_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -504,13 +528,15 @@ pub fn add_digest_ha1(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `digest_ha1`, it returns `None`.
 pub fn lookup_digest_ha1(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet.lookup(DIGEST_HA1_TYPE).map(|v| v.encode_string())
+    packet.lookup(DIGEST_HA1_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `digest_ha1` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_digest_ha1(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DIGEST_HA1_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -528,13 +554,15 @@ pub fn add_sip_aor(packet: &mut Packet, value: &str) {
 ///
 /// It returns the first looked up value. If there is no associated value with `sip_aor`, it returns `None`.
 pub fn lookup_sip_aor(packet: &Packet) -> Option<Result<String, AVPError>> {
-    packet.lookup(SIP_AOR_TYPE).map(|v| v.encode_string())
+    packet.lookup(SIP_AOR_TYPE).map(AVP::encode_string)
 }
 /// Lookup all of the `sip_aor` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_sip_aor(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(SIP_AOR_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }

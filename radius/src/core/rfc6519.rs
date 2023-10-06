@@ -36,13 +36,15 @@ pub fn add_ds_lite_tunnel_name(packet: &mut Packet, value: &str) {
 pub fn lookup_ds_lite_tunnel_name(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(DS_LITE_TUNNEL_NAME_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `ds_lite_tunnel_name` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_ds_lite_tunnel_name(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DS_LITE_TUNNEL_NAME_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }

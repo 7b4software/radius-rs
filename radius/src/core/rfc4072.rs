@@ -34,13 +34,15 @@ pub fn add_eap_key_name(packet: &mut Packet, value: &[u8]) {
 ///
 /// It returns the first looked up value. If there is no associated value with `eap_key_name`, it returns `None`.
 pub fn lookup_eap_key_name(packet: &Packet) -> Option<Vec<u8>> {
-    packet.lookup(EAP_KEY_NAME_TYPE).map(|v| v.encode_bytes())
+    packet.lookup(EAP_KEY_NAME_TYPE).map(AVP::encode_bytes)
 }
 /// Lookup all of the `eap_key_name` octets value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_eap_key_name(packet: &Packet) -> Vec<Vec<u8>> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(EAP_KEY_NAME_TYPE) {
-        vec.push(avp.encode_bytes())
+        vec.push(avp.encode_bytes());
     }
     vec
 }

@@ -37,13 +37,15 @@ pub fn add_gss_acceptor_service_name(packet: &mut Packet, value: &str) {
 pub fn lookup_gss_acceptor_service_name(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(GSS_ACCEPTOR_SERVICE_NAME_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `gss_acceptor_service_name` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_gss_acceptor_service_name(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(GSS_ACCEPTOR_SERVICE_NAME_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -63,13 +65,15 @@ pub fn add_gss_acceptor_host_name(packet: &mut Packet, value: &str) {
 pub fn lookup_gss_acceptor_host_name(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(GSS_ACCEPTOR_HOST_NAME_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `gss_acceptor_host_name` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_gss_acceptor_host_name(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(GSS_ACCEPTOR_HOST_NAME_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -89,13 +93,15 @@ pub fn add_gss_acceptor_service_specifics(packet: &mut Packet, value: &str) {
 pub fn lookup_gss_acceptor_service_specifics(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(GSS_ACCEPTOR_SERVICE_SPECIFICS_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `gss_acceptor_service_specifics` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_gss_acceptor_service_specifics(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(GSS_ACCEPTOR_SERVICE_SPECIFICS_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -115,13 +121,15 @@ pub fn add_gss_acceptor_realm_name(packet: &mut Packet, value: &str) {
 pub fn lookup_gss_acceptor_realm_name(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(GSS_ACCEPTOR_REALM_NAME_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `gss_acceptor_realm_name` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_gss_acceptor_realm_name(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(GSS_ACCEPTOR_REALM_NAME_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }

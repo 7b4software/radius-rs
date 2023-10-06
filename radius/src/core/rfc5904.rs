@@ -49,12 +49,13 @@ pub fn add_pkm_ss_cert(packet: &mut Packet, value: &[u8]) {
 }
 pub fn lookup_pkm_ss_cert(packet: &Packet) -> Option<Vec<u8>> {
     let avps = packet.lookup_all(PKM_SS_CERT_TYPE);
-    match avps.is_empty() {
-        true => None,
-        false => Some(avps.into_iter().fold(Vec::new(), |mut acc, v| {
+    if avps.is_empty() {
+        None
+    } else {
+        Some(avps.into_iter().fold(Vec::new(), |mut acc, v| {
             acc.extend(v.encode_bytes());
             acc
-        })),
+        }))
     }
 }
 
@@ -73,12 +74,13 @@ pub fn add_pkm_ca_cert(packet: &mut Packet, value: &[u8]) {
 }
 pub fn lookup_pkm_ca_cert(packet: &Packet) -> Option<Vec<u8>> {
     let avps = packet.lookup_all(PKM_CA_CERT_TYPE);
-    match avps.is_empty() {
-        true => None,
-        false => Some(avps.into_iter().fold(Vec::new(), |mut acc, v| {
+    if avps.is_empty() {
+        None
+    } else {
+        Some(avps.into_iter().fold(Vec::new(), |mut acc, v| {
             acc.extend(v.encode_bytes());
             acc
-        })),
+        }))
     }
 }
 
@@ -97,13 +99,15 @@ pub fn add_pkm_config_settings(packet: &mut Packet, value: &[u8]) {
 pub fn lookup_pkm_config_settings(packet: &Packet) -> Option<Vec<u8>> {
     packet
         .lookup(PKM_CONFIG_SETTINGS_TYPE)
-        .map(|v| v.encode_bytes())
+        .map(AVP::encode_bytes)
 }
 /// Lookup all of the `pkm_config_settings` octets value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_pkm_config_settings(packet: &Packet) -> Vec<Vec<u8>> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(PKM_CONFIG_SETTINGS_TYPE) {
-        vec.push(avp.encode_bytes())
+        vec.push(avp.encode_bytes());
     }
     vec
 }
@@ -123,13 +127,15 @@ pub fn add_pkm_cryptosuite_list(packet: &mut Packet, value: &[u8]) {
 pub fn lookup_pkm_cryptosuite_list(packet: &Packet) -> Option<Vec<u8>> {
     packet
         .lookup(PKM_CRYPTOSUITE_LIST_TYPE)
-        .map(|v| v.encode_bytes())
+        .map(AVP::encode_bytes)
 }
 /// Lookup all of the `pkm_cryptosuite_list` octets value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_pkm_cryptosuite_list(packet: &Packet) -> Vec<Vec<u8>> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(PKM_CRYPTOSUITE_LIST_TYPE) {
-        vec.push(avp.encode_bytes())
+        vec.push(avp.encode_bytes());
     }
     vec
 }
@@ -147,13 +153,15 @@ pub fn add_pkm_said(packet: &mut Packet, value: u16) {
 ///
 /// It returns the first looked up value. If there is no associated value with `pkm_said`, it returns `None`.
 pub fn lookup_pkm_said(packet: &Packet) -> Option<Result<u16, AVPError>> {
-    packet.lookup(PKM_SAID_TYPE).map(|v| v.encode_u16())
+    packet.lookup(PKM_SAID_TYPE).map(AVP::encode_u16)
 }
 /// Lookup all of the `pkm_said` short integer value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_pkm_said(packet: &Packet) -> Result<Vec<u16>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(PKM_SAID_TYPE) {
-        vec.push(avp.encode_u16()?)
+        vec.push(avp.encode_u16()?);
     }
     Ok(vec)
 }
@@ -171,15 +179,15 @@ pub fn add_pkm_sa_descriptor(packet: &mut Packet, value: &[u8]) {
 ///
 /// It returns the first looked up value. If there is no associated value with `pkm_sa_descriptor`, it returns `None`.
 pub fn lookup_pkm_sa_descriptor(packet: &Packet) -> Option<Vec<u8>> {
-    packet
-        .lookup(PKM_SA_DESCRIPTOR_TYPE)
-        .map(|v| v.encode_bytes())
+    packet.lookup(PKM_SA_DESCRIPTOR_TYPE).map(AVP::encode_bytes)
 }
 /// Lookup all of the `pkm_sa_descriptor` octets value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_pkm_sa_descriptor(packet: &Packet) -> Vec<Vec<u8>> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(PKM_SA_DESCRIPTOR_TYPE) {
-        vec.push(avp.encode_bytes())
+        vec.push(avp.encode_bytes());
     }
     vec
 }
@@ -197,13 +205,15 @@ pub fn add_pkm_auth_key(packet: &mut Packet, value: &[u8]) {
 ///
 /// It returns the first looked up value. If there is no associated value with `pkm_auth_key`, it returns `None`.
 pub fn lookup_pkm_auth_key(packet: &Packet) -> Option<Vec<u8>> {
-    packet.lookup(PKM_AUTH_KEY_TYPE).map(|v| v.encode_bytes())
+    packet.lookup(PKM_AUTH_KEY_TYPE).map(AVP::encode_bytes)
 }
 /// Lookup all of the `pkm_auth_key` octets value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_pkm_auth_key(packet: &Packet) -> Vec<Vec<u8>> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(PKM_AUTH_KEY_TYPE) {
-        vec.push(avp.encode_bytes())
+        vec.push(avp.encode_bytes());
     }
     vec
 }

@@ -502,10 +502,14 @@ impl AVP {
     /// # Errors
     /// `AVPError`
     pub fn encode_ipv4_prefix(&self) -> Result<Vec<u8>, AVPError> {
-        if self.value.len() == 6 { Ok(self.value[2..].to_owned()) } else { Err(AVPError::InvalidAttributeLengthError(
-            "6 bytes".to_owned(),
-            self.value.len(),
-        )) }
+        if self.value.len() == 6 {
+            Ok(self.value[2..].to_owned())
+        } else {
+            Err(AVPError::InvalidAttributeLengthError(
+                "6 bytes".to_owned(),
+                self.value.len(),
+            ))
+        }
     }
 
     /// (This method is for dictionary developers) encode an AVP into Ipv6 value.
@@ -531,10 +535,14 @@ impl AVP {
     /// # Errors
     /// `AVPError`
     pub fn encode_ipv6_prefix(&self) -> Result<Vec<u8>, AVPError> {
-        if self.value.len() >= 2 { Ok(self.value[2..].to_owned()) } else { Err(AVPError::InvalidAttributeLengthError(
-            "2+ bytes".to_owned(),
-            self.value.len(),
-        )) }
+        if self.value.len() >= 2 {
+            Ok(self.value[2..].to_owned())
+        } else {
+            Err(AVPError::InvalidAttributeLengthError(
+                "2+ bytes".to_owned(),
+                self.value.len(),
+            ))
+        }
     }
 
     /// (This method is for dictionary developers) encode an AVP into user-password value as bytes.

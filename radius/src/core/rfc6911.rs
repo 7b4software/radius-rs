@@ -37,16 +37,20 @@ pub fn add_framed_ipv6_address(packet: &mut Packet, value: &Ipv6Addr) {
 /// Lookup a `framed_ipv6_address` ipv6addr value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `framed_ipv6_address`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_framed_ipv6_address(packet: &Packet) -> Option<Result<Ipv6Addr, AVPError>> {
     packet
         .lookup(FRAMED_IPV6_ADDRESS_TYPE)
-        .map(|v| v.encode_ipv6())
+        .map(AVP::encode_ipv6)
 }
 /// Lookup all of the `framed_ipv6_address` ipv6addr value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_framed_ipv6_address(packet: &Packet) -> Result<Vec<Ipv6Addr>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(FRAMED_IPV6_ADDRESS_TYPE) {
-        vec.push(avp.encode_ipv6()?)
+        vec.push(avp.encode_ipv6()?);
     }
     Ok(vec)
 }
@@ -63,16 +67,20 @@ pub fn add_dns_server_ipv6_address(packet: &mut Packet, value: &Ipv6Addr) {
 /// Lookup a `dns_server_ipv6_address` ipv6addr value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `dns_server_ipv6_address`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_dns_server_ipv6_address(packet: &Packet) -> Option<Result<Ipv6Addr, AVPError>> {
     packet
         .lookup(DNS_SERVER_IPV6_ADDRESS_TYPE)
-        .map(|v| v.encode_ipv6())
+        .map(AVP::encode_ipv6)
 }
 /// Lookup all of the `dns_server_ipv6_address` ipv6addr value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_dns_server_ipv6_address(packet: &Packet) -> Result<Vec<Ipv6Addr>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DNS_SERVER_IPV6_ADDRESS_TYPE) {
-        vec.push(avp.encode_ipv6()?)
+        vec.push(avp.encode_ipv6()?);
     }
     Ok(vec)
 }
@@ -83,6 +91,8 @@ pub fn delete_route_ipv6_information(packet: &mut Packet) {
     packet.delete(ROUTE_IPV6_INFORMATION_TYPE);
 }
 /// Add `route_ipv6_information` ipv6 prefix value to a packet.
+/// # Errors
+/// `AVPError`
 pub fn add_route_ipv6_information(packet: &mut Packet, value: &[u8]) -> Result<(), AVPError> {
     packet.add(AVP::from_ipv6_prefix(ROUTE_IPV6_INFORMATION_TYPE, value)?);
     Ok(())
@@ -90,16 +100,20 @@ pub fn add_route_ipv6_information(packet: &mut Packet, value: &[u8]) -> Result<(
 /// Lookup a `route_ipv6_information` ipv6 prefix value from a packet.
 ///
 /// It returns the first looked up value. If there is no associated value with `route_ipv6_information`, it returns `None`.
+/// # Errors
+/// `AVPError`
 pub fn lookup_route_ipv6_information(packet: &Packet) -> Option<Result<Vec<u8>, AVPError>> {
     packet
         .lookup(ROUTE_IPV6_INFORMATION_TYPE)
-        .map(|v| v.encode_ipv6_prefix())
+        .map(AVP::encode_ipv6_prefix)
 }
 /// Lookup all of the `route_ipv6_information` ipv6 prefix value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_route_ipv6_information(packet: &Packet) -> Result<Vec<Vec<u8>>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(ROUTE_IPV6_INFORMATION_TYPE) {
-        vec.push(avp.encode_ipv6_prefix()?)
+        vec.push(avp.encode_ipv6_prefix()?);
     }
     Ok(vec)
 }
@@ -119,13 +133,15 @@ pub fn add_delegated_ipv6_prefix_pool(packet: &mut Packet, value: &str) {
 pub fn lookup_delegated_ipv6_prefix_pool(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(DELEGATED_IPV6_PREFIX_POOL_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `delegated_ipv6_prefix_pool` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_delegated_ipv6_prefix_pool(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(DELEGATED_IPV6_PREFIX_POOL_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
@@ -145,13 +161,15 @@ pub fn add_stateful_ipv6_address_pool(packet: &mut Packet, value: &str) {
 pub fn lookup_stateful_ipv6_address_pool(packet: &Packet) -> Option<Result<String, AVPError>> {
     packet
         .lookup(STATEFUL_IPV6_ADDRESS_POOL_TYPE)
-        .map(|v| v.encode_string())
+        .map(AVP::encode_string)
 }
 /// Lookup all of the `stateful_ipv6_address_pool` string value from a packet.
+/// # Errors
+/// `AVPError`
 pub fn lookup_all_stateful_ipv6_address_pool(packet: &Packet) -> Result<Vec<String>, AVPError> {
     let mut vec = Vec::new();
     for avp in packet.lookup_all(STATEFUL_IPV6_ADDRESS_POOL_TYPE) {
-        vec.push(avp.encode_string()?)
+        vec.push(avp.encode_string()?);
     }
     Ok(vec)
 }
