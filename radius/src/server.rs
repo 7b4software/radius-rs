@@ -22,7 +22,7 @@ const DEFAULT_SKIP_AUTHENTICITY_VALIDATION: bool = false;
 /// A basic implementation of the RADIUS server.
 ///
 /// ## Example Usage
-/// - https://github.com/moznion/radius-rs/blob/HEAD/examples/server.rs
+/// - <https://github.com/moznion/radius-rs/blob/HEAD/examples/server.rs>
 pub struct Server<X, E: Debug, T: RequestHandler<X, E>, U: SecretProvider> {
     skip_authenticity_validation: bool,
     buf_size: usize,
@@ -48,12 +48,14 @@ impl<X, E: Debug, T: RequestHandler<X, E>, U: SecretProvider> Server<X, E, T, U>
     /// then it calls `run()` method for a `Server` instance that returned by this function,
     /// it starts RADIUS request handling.
     ///
-    /// ## Parameters
+    /// # Arguments
     ///
     /// - `host` - a host to listen (e.g. `0.0.0.0`)
     /// - `port` - a port number to listen (e.g. `1812`)
     /// - `request_handler` - a request handler for the RADIUS requests.
     /// - `secret_provider` - a provider for shared-secret value.
+    /// # Errors
+    /// `io::Error`
     pub async fn listen(
         host: &str,
         port: u16,
@@ -75,16 +77,18 @@ impl<X, E: Debug, T: RequestHandler<X, E>, U: SecretProvider> Server<X, E, T, U>
             request_handler_arc,
             secret_provider_arc,
             undergoing_requests_lock_arc,
-            _phantom_return_type: Default::default(),
-            _phantom_error_type: Default::default(),
+            _phantom_return_type: PhantomData,
+            _phantom_error_type: PhantomData,
         })
     }
 
     /// Starts the RADIUS requests handling.
     ///
-    /// ## Parameters
+    /// # Parameters
     ///
     /// - `shutdown_trigger`: an implementation of the `Future` to interrupt to shutdown the RADIUS server (e.g. `signal::ctrl_c()`)
+    /// # Errors
+    /// `io::Error`
     pub async fn run(&mut self, shutdown_trigger: impl Future) -> Result<(), io::Error> {
         tokio::select! {
             res = self.run_loop() => {
@@ -108,6 +112,8 @@ impl<X, E: Debug, T: RequestHandler<X, E>, U: SecretProvider> Server<X, E, T, U>
     }
 
     /// Returns the listening address.
+    /// # Errors
+    /// `io::Error`
     pub fn get_listen_address(&self) -> io::Result<SocketAddr> {
         self.conn_arc.local_addr()
     }
@@ -253,9 +259,11 @@ pub enum SecretProviderError {
     GenericError(String),
 }
 
-/// SecretProvider is a provider for secret value.
+/// `SecretProvider` is a provider for secret value.
 pub trait SecretProvider: 'static + Sync + Send {
     /// This method has to implement the generator of the shared-secret value to verify the request.
+    /// # Errors
+    /// `SecretProvidedError`
     fn fetch_secret(&self, remote_addr: SocketAddr) -> Result<Vec<u8>, SecretProviderError>;
 }
 

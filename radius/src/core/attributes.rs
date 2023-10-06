@@ -4,6 +4,9 @@ use crate::core::avp::{AVPType, AVP};
 pub(crate) struct Attributes(pub(crate) Vec<AVP>);
 
 impl Attributes {
+    /// Decode an attribute.
+    /// # Errors
+    /// `String`
     pub(crate) fn decode(bs: &[u8]) -> Result<Attributes, String> {
         let mut i = 0;
         let mut attrs = Vec::new();
@@ -34,11 +37,11 @@ impl Attributes {
     }
 
     pub(crate) fn add(&mut self, avp: AVP) {
-        self.0.push(avp)
+        self.0.push(avp);
     }
 
     pub(crate) fn extend(&mut self, avps: Vec<AVP>) {
-        self.0.extend(avps)
+        self.0.extend(avps);
     }
 
     pub(crate) fn del(&mut self, typ: AVPType) {
@@ -53,7 +56,10 @@ impl Attributes {
         self.0.iter().filter(|&avp| avp.typ == typ).collect()
     }
 
-    pub(crate) fn encode(&self) -> Result<Vec<u8>, String> {
+    /// Encode an attribute.
+    /// # Errors
+    /// `String`
+     pub(crate) fn encode(&self) -> Result<Vec<u8>, String> {
         let mut encoded: Vec<u8> = Vec::new();
 
         for avp in &self.0 {
@@ -62,7 +68,8 @@ impl Attributes {
                 return Err("attribute is too large".to_owned());
             }
             encoded.push(avp.typ);
-            encoded.push(2 + attr_len as u8);
+            // # Panics can't panic since already checked out of bound above.
+            encoded.push(2 + u8::try_from(attr_len).unwrap());
             encoded.extend(&avp.value);
         }
 

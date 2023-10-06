@@ -24,6 +24,7 @@ pub enum Code {
 }
 
 impl Code {
+    #[must_use]
     pub fn string(&self) -> &'static str {
         match self {
             Code::AccessRequest => "Access-Request",
@@ -45,6 +46,7 @@ impl Code {
         }
     }
 
+    #[must_use]
     pub fn from(value: u8) -> Self {
         match Code::try_from(value) {
             Ok(code) => code,

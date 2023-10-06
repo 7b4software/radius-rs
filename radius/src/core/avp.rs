@@ -59,6 +59,7 @@ pub struct AVP {
 
 impl AVP {
     /// (This method is for dictionary developers) make an AVP from a u32 value.
+    #[must_use]
     pub fn from_u32(typ: AVPType, value: u32) -> Self {
         AVP {
             typ,
@@ -67,6 +68,7 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) make an AVP from a u16 value.
+    #[must_use]
     pub fn from_u16(typ: AVPType, value: u16) -> Self {
         AVP {
             typ,
@@ -75,6 +77,7 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) make an AVP from a tagged u32 value.
+    #[must_use]
     pub fn from_tagged_u32(typ: AVPType, tag: Option<&Tag>, value: u32) -> Self {
         let tag = match tag {
             None => &Tag {
@@ -90,6 +93,7 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) make an AVP from a string value.
+    #[must_use]
     pub fn from_string(typ: AVPType, value: &str) -> Self {
         AVP {
             typ,
@@ -98,6 +102,7 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) make an AVP from a tagged string value.
+    #[must_use]
     pub fn from_tagged_string(typ: AVPType, tag: Option<&Tag>, value: &str) -> Self {
         match tag {
             None => AVP {
@@ -112,6 +117,7 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) make an AVP from bytes.
+    #[must_use]
     pub fn from_bytes(typ: AVPType, value: &[u8]) -> Self {
         AVP {
             typ,
@@ -120,6 +126,7 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) make an AVP from a IPv4 value.
+    #[must_use]
     pub fn from_ipv4(typ: AVPType, value: &Ipv4Addr) -> Self {
         AVP {
             typ,
@@ -128,6 +135,8 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) make an AVP from a IPv4-prefix value.
+    /// # Errors
+    /// `AVPError`
     pub fn from_ipv4_prefix(typ: AVPType, prefix: &[u8]) -> Result<Self, AVPError> {
         let prefix_len = prefix.len();
         if prefix_len != 4 {
@@ -139,11 +148,12 @@ impl AVP {
 
         Ok(AVP {
             typ,
-            value: [vec![0x00, prefix_len as u8 & 0b00111111], prefix.to_vec()].concat::<u8>(),
+            value: [vec![0x00, 0x04], prefix.to_vec()].concat::<u8>(),
         })
     }
 
     /// (This method is for dictionary developers) make an AVP from a IPv6 value.
+    #[must_use]
     pub fn from_ipv6(typ: AVPType, value: &Ipv6Addr) -> Self {
         AVP {
             typ,
@@ -152,23 +162,30 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) make an AVP from a IPv6-prefix value.
+    /// # Errors
+    /// `AVPError`
+    #[allow(clippy::cast_possible_truncation)]
     pub fn from_ipv6_prefix(typ: AVPType, prefix: &[u8]) -> Result<Self, AVPError> {
         let prefix_len = prefix.len();
-        if prefix_len > 16 {
+        let payload_length: u8 = if prefix_len > 16 || prefix_len * 8 >= 255 {
             return Err(AVPError::InvalidAttributeLengthError(
                 "16 bytes".to_owned(),
                 prefix_len,
             ));
-        }
+        } else {
+            prefix_len as u8 * 8
+        };
 
         Ok(AVP {
             typ,
-            value: [vec![0x00, (prefix_len * 8) as u8], prefix.to_vec()].concat::<u8>(),
+            value: [vec![0x00, payload_length], prefix.to_vec()].concat::<u8>(),
         })
     }
 
     /// (This method is for dictionary developers) make an AVP from a user-password value.
-    /// see also: https://tools.ietf.org/html/rfc2865#section-5.2
+    /// see also: <https://tools.ietf.org/html/rfc2865#section-5.2>
+    /// # Errors
+    /// `AVPError`
     pub fn from_user_password(
         typ: AVPType,
         plain_text: &[u8],
@@ -235,6 +252,7 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) make an AVP from a date value.
+    #[must_use]
     pub fn from_date(typ: AVPType, dt: &DateTime<Utc>) -> Self {
         AVP {
             typ,
@@ -243,7 +261,9 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) make an AVP from a tunne-password value.
-    /// see also: https://tools.ietf.org/html/rfc2868#section-3.5
+    /// see also: <https://tools.ietf.org/html/rfc2868#section-3.5>
+    /// # Errors
+    /// `AVPError`
     pub fn from_tunnel_password(
         typ: AVPType,
         tag: Option<&Tag>,
@@ -335,6 +355,8 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) encode an AVP into a u32 value.
+    /// # Errors
+    /// `AVPError`
     pub fn encode_u32(&self) -> Result<u32, AVPError> {
         const U32_SIZE: usize = std::mem::size_of::<u32>();
         if self.value.len() != U32_SIZE {
@@ -352,6 +374,8 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) encode an AVP into a u16 value.
+    /// # Errors
+    /// `AVPError`
     pub fn encode_u16(&self) -> Result<u16, AVPError> {
         const U16_SIZE: usize = std::mem::size_of::<u16>();
         if self.value.len() != U16_SIZE {
@@ -369,7 +393,10 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) encode an AVP into a tag and u32 value.
+    /// # Errors
+    /// `AVPError`
     pub fn encode_tagged_u32(&self) -> Result<(u32, Tag), AVPError> {
+        const U32_SIZE: usize = std::mem::size_of::<u32>();
         if self.value.is_empty() {
             return Err(AVPError::TagMissingError());
         }
@@ -385,7 +412,6 @@ impl AVP {
             return Err(AVPError::InvalidTagForIntegerValueError());
         }
 
-        const U32_SIZE: usize = std::mem::size_of::<u32>();
         if self.value[1..].len() != U32_SIZE {
             return Err(AVPError::InvalidAttributeLengthError(
                 format!("{} bytes", U32_SIZE + 1),
@@ -400,16 +426,20 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) encode an AVP into a string value.
+    /// # Errors
+    /// `AVPError`
     pub fn encode_string(&self) -> Result<String, AVPError> {
-        match String::from_utf8(self.value.to_vec()) {
+        match String::from_utf8(self.value.clone()) {
             Ok(str) => Ok(str),
             Err(e) => Err(AVPError::DecodingError(e.to_string())),
         }
     }
 
     /// (This method is for dictionary developers) encode an AVP into a tag and string value.
+    /// # Errors
+    /// `AVPError`
     pub fn encode_tagged_string(&self) -> Result<(String, Option<Tag>), AVPError> {
-        let string_vec = self.value.to_vec();
+        let string_vec = self.value.clone();
         if string_vec.is_empty() {
             return Err(AVPError::TagMissingError());
         }
@@ -437,18 +467,21 @@ impl AVP {
         // ref RFC2868:
         //   If the Tag field is greater than 0x1F, it SHOULD be
         //   interpreted as the first byte of the following String field.
-        match String::from_utf8(self.value.to_vec()) {
+        match String::from_utf8(self.value.clone()) {
             Ok(str) => Ok((str, None)),
             Err(e) => Err(AVPError::DecodingError(e.to_string())),
         }
     }
 
     /// (This method is for dictionary developers) encode an AVP into bytes.
+    #[must_use]
     pub fn encode_bytes(&self) -> Vec<u8> {
-        self.value.to_vec()
+        self.value.clone()
     }
 
     /// (This method is for dictionary developers) encode an AVP into Ipv4 value.
+    /// # Errors
+    /// `AVPError`
     pub fn encode_ipv4(&self) -> Result<Ipv4Addr, AVPError> {
         const IPV4_SIZE: usize = std::mem::size_of::<Ipv4Addr>();
         if self.value.len() != IPV4_SIZE {
@@ -466,17 +499,18 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) encode an AVP into Ipv4-prefix value.
+    /// # Errors
+    /// `AVPError`
     pub fn encode_ipv4_prefix(&self) -> Result<Vec<u8>, AVPError> {
-        match self.value.len() == 6 {
-            true => Ok(self.value[2..].to_owned()),
-            false => Err(AVPError::InvalidAttributeLengthError(
-                "6 bytes".to_owned(),
-                self.value.len(),
-            )),
-        }
+        if self.value.len() == 6 { Ok(self.value[2..].to_owned()) } else { Err(AVPError::InvalidAttributeLengthError(
+            "6 bytes".to_owned(),
+            self.value.len(),
+        )) }
     }
 
     /// (This method is for dictionary developers) encode an AVP into Ipv6 value.
+    /// # Errors
+    /// `AVPError`
     pub fn encode_ipv6(&self) -> Result<Ipv6Addr, AVPError> {
         const IPV6_SIZE: usize = std::mem::size_of::<Ipv6Addr>();
         if self.value.len() != IPV6_SIZE {
@@ -494,17 +528,18 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) encode an AVP into Ipv6-prefix value.
+    /// # Errors
+    /// `AVPError`
     pub fn encode_ipv6_prefix(&self) -> Result<Vec<u8>, AVPError> {
-        match self.value.len() >= 2 {
-            true => Ok(self.value[2..].to_owned()),
-            false => Err(AVPError::InvalidAttributeLengthError(
-                "2+ bytes".to_owned(),
-                self.value.len(),
-            )),
-        }
+        if self.value.len() >= 2 { Ok(self.value[2..].to_owned()) } else { Err(AVPError::InvalidAttributeLengthError(
+            "2+ bytes".to_owned(),
+            self.value.len(),
+        )) }
     }
 
     /// (This method is for dictionary developers) encode an AVP into user-password value as bytes.
+    /// # Errors
+    /// `AVPError`
     pub fn encode_user_password(
         &self,
         secret: &[u8],
@@ -552,6 +587,8 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) encode an AVP into date value.
+    /// # Errors
+    /// `AVPError`
     pub fn encode_date(&self) -> Result<DateTime<Utc>, AVPError> {
         const U32_SIZE: usize = std::mem::size_of::<u32>();
         if self.value.len() != U32_SIZE {
@@ -572,6 +609,8 @@ impl AVP {
     }
 
     /// (This method is for dictionary developers) encode an AVP into a tunnel-password value as bytes.
+    /// # Errors
+    /// `AVPError`
     pub fn encode_tunnel_password(
         &self,
         secret: &[u8],

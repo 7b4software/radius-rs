@@ -10,6 +10,7 @@ use crate::core::code::Code;
 const MAX_PACKET_LENGTH: usize = 4096;
 const RADIUS_PACKET_HEADER_LENGTH: usize = 20; // i.e. minimum packet length
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Error, Debug, PartialEq)]
 pub enum PacketError {
     /// An error indicates the entire length of the given packet has insufficient length.
@@ -52,6 +53,7 @@ impl Packet {
     ///
     /// By default, this constructor makes an instance with a random identifier value.
     /// If you'd like to set an arbitrary identifier, please use `new_with_identifier()` constructor instead or `set_identifier()` method for created instance.
+    #[must_use]
     pub fn new(code: Code, secret: &[u8]) -> Self {
         Self::_new(code, secret, None)
     }
@@ -59,15 +61,17 @@ impl Packet {
     /// Constructor for a Packet with arbitrary identifier value.
     ///
     /// If you want to make an instance with a random identifier value, please consider using `new()`.
+    #[must_use]
     pub fn new_with_identifier(code: Code, secret: &[u8], identifier: u8) -> Self {
         Self::_new(code, secret, Some(identifier))
     }
 
+    #[must_use]
     fn _new(code: Code, secret: &[u8], maybe_identifier: Option<u8>) -> Self {
         let mut rng = rand::thread_rng();
         let authenticator = (0..16).map(|_| rng.gen()).collect::<Vec<u8>>();
         Packet {
-            code: code.to_owned(),
+            code,
             identifier: match maybe_identifier {
                 Some(ident) => ident,
                 None => rng.gen(),
@@ -78,18 +82,22 @@ impl Packet {
         }
     }
 
+    #[must_use]
     pub fn get_code(&self) -> Code {
         self.code
     }
 
+    #[must_use]
     pub fn get_identifier(&self) -> u8 {
         self.identifier
     }
 
+    #[must_use]
     pub fn get_secret(&self) -> &Vec<u8> {
         &self.secret
     }
 
+    #[must_use]
     pub fn get_authenticator(&self) -> &Vec<u8> {
         &self.authenticator
     }
@@ -100,6 +108,8 @@ impl Packet {
     }
 
     /// This decodes bytes into a Packet.
+    /// # Errors
+    /// `PacketError`
     pub fn decode(bs: &[u8], secret: &[u8]) -> Result<Self, PacketError> {
         if bs.len() < RADIUS_PACKET_HEADER_LENGTH {
             return Err(PacketError::InsufficientPacketPayloadLengthError(
@@ -148,6 +158,7 @@ impl Packet {
     }
 
     /// This method makes a response packet according to self (i.e. request packet).
+    #[must_use]
     pub fn make_response_packet(&self, code: Code) -> Self {
         Packet {
             code,
@@ -159,6 +170,8 @@ impl Packet {
     }
 
     /// This method encodes the Packet into bytes.
+    /// # Errors
+    /// `PacketError`
     pub fn encode(&self) -> Result<Vec<u8>, PacketError> {
         let mut bs = match self.marshal_binary() {
             Ok(bs) => bs,
@@ -233,7 +246,7 @@ impl Packet {
         bs.push(self.code as u8);
         bs.push(self.identifier);
         bs.extend(u16::to_be_bytes(size).to_vec());
-        bs.extend(self.authenticator.to_vec());
+        bs.extend(self.authenticator.clone());
         bs.extend(match self.attributes.encode() {
             Ok(encoded) => encoded,
             Err(e) => return Err(e),
@@ -242,6 +255,7 @@ impl Packet {
     }
 
     /// Returns whether the Packet is authentic response or not.
+    #[must_use]
     pub fn is_authentic_response(response: &[u8], request: &[u8], secret: &[u8]) -> bool {
         if response.len() < RADIUS_PACKET_HEADER_LENGTH
             || request.len() < RADIUS_PACKET_HEADER_LENGTH
@@ -264,6 +278,7 @@ impl Packet {
     }
 
     /// Returns whether the Packet is authentic request or not.
+    #[must_use]
     pub fn is_authentic_request(request: &[u8], secret: &[u8]) -> bool {
         if request.len() < RADIUS_PACKET_HEADER_LENGTH || secret.is_empty() {
             return false;
@@ -296,7 +311,7 @@ impl Packet {
 
     /// Add AVPs to the list of AVPs.
     pub fn extend(&mut self, avps: Vec<AVP>) {
-        self.attributes.extend(avps)
+        self.attributes.extend(avps);
     }
 
     /// Delete all of AVPs from the list according to given AVP type.
@@ -305,6 +320,7 @@ impl Packet {
     }
 
     /// Returns an AVP that matches at first with the given AVP type. If there are not any matched ones, this returns `None`.
+    #[must_use]
     pub fn lookup(&self, typ: AVPType) -> Option<&AVP> {
         self.attributes.lookup(typ)
     }

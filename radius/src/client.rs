@@ -10,6 +10,7 @@ use tokio::time::timeout;
 use crate::core::packet::Packet;
 
 #[derive(Error, Debug)]
+#[allow(clippy::module_name_repetitions)]
 pub enum ClientError {
     /// This error is occurred when UDP socket binding has been failed.
     #[error("failed to bind a UDP socket; {0}")]
@@ -63,6 +64,7 @@ impl Client {
     ///                          If this value is `None`, it never timed-out.
     /// * `socket_timeout` - A duration of socket timeout. If the response is not returned in time, the `SocketTimeoutError` occurs.
     ///                      If this value is `None`, it never timed-out.
+    #[must_use]
     pub fn new(connection_timeout: Option<Duration>, socket_timeout: Option<Duration>) -> Self {
         Client {
             connection_timeout,
@@ -73,6 +75,8 @@ impl Client {
     /// This method sends a packet to the destination.
     ///
     /// This method doesn't support auto retransmission when something failed, so if you need such a feature you have to implement that.
+    /// # Errors
+    /// `ClientError`
     pub async fn send_packet(
         &self,
         remote_addr: &SocketAddr,
@@ -83,8 +87,7 @@ impl Client {
         } else {
             "[::]:0"
         }
-        .parse()
-        .unwrap();
+        .parse().map_err(|error|ClientError::FailedUdpSocketBindingError(format!("{error:?}")))?;
 
         let conn = match UdpSocket::bind(local_addr).await {
             Ok(conn) => conn,
@@ -121,7 +124,7 @@ impl Client {
             None => self.request(&conn, &request_data, remote_addr).await,
         }?;
 
-        match Packet::decode(&response.to_vec(), request_packet.get_secret()) {
+        match Packet::decode(&response.clone(), request_packet.get_secret()) {
             Ok(response_packet) => Ok(response_packet),
             Err(e) => Err(ClientError::FailedDecodingRadiusResponseError(format!(
                 "{e}"
@@ -129,9 +132,12 @@ impl Client {
         }
     }
 
+    /// Connect to radius server.
+    /// # Errors
+    /// `ClientError`
     async fn connect(&self, conn: &UdpSocket, remote_addr: &SocketAddr) -> Result<(), ClientError> {
         match conn.connect(remote_addr).await {
-            Ok(_) => Ok(()),
+            Ok(()) => Ok(()),
             Err(e) => Err(ClientError::FailedEstablishingUdpConnectionError(
                 remote_addr.to_string(),
                 e.to_string(),
@@ -139,6 +145,9 @@ impl Client {
         }
     }
 
+    /// Send request
+    /// # Errors
+    /// `ClientError`
     async fn request(
         &self,
         conn: &UdpSocket,
